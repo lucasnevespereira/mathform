@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl } from "@angular/forms";
 import { MathValidators } from "../math-validators";
 
-import { delay, filter } from "rxjs/operators";
+import { delay, filter, scan } from "rxjs/operators";
 
 @Component({
   selector: "app-equation",
@@ -10,6 +10,7 @@ import { delay, filter } from "rxjs/operators";
   styleUrls: ["./equation.component.css"],
 })
 export class EquationComponent implements OnInit {
+  secondsPerSolution = 0;
   mathForm = new FormGroup(
     {
       a: new FormControl(this.randomNumber()),
@@ -34,9 +35,21 @@ export class EquationComponent implements OnInit {
     this.mathForm.statusChanges
       .pipe(
         filter((value) => value === "VALID"),
-        delay(500)
+        delay(500),
+        scan(
+          (acc, value) => {
+            return {
+              numberSolved: acc.numberSolved + 1,
+              startTime: acc.startTime,
+            };
+          },
+          { numberSolved: 0, startTime: new Date() }
+        )
       )
-      .subscribe(() => {
+      .subscribe(({ numberSolved, startTime }) => {
+        this.secondsPerSolution =
+          (new Date().getTime() - startTime.getTime()) / numberSolved / 1000;
+
         // To set new random number
         // this.mathForm.controls.a.setValue(this.randomNumber());
         // this.mathForm.controls.b.setValue(this.randomNumber());
