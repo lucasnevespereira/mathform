@@ -5,16 +5,19 @@ export class MathValidators {
   // Static methods can be access without needing to initialize parent class, so:
   // -> we can call addition without initialize MathValidators
   //  ex: MathValidators.addition
-  static addition(form: AbstractControl) {
-    // destructured syntax
-    const { a, b, answer } = form.value;
+  static addition(target: string, sourceOne: string, sourceTwo: string) {
+    return (form: AbstractControl) => {
+      const sum = form.value[target];
+      const firstNumber = form.value[sourceOne];
+      const secondNumber = form.value[sourceTwo];
 
-    if (a + b === parseInt(answer)) {
-      // sends null cause there is no errors
-      return null;
-    } else {
-      // sends addition true to form errors
-      return { addition: true };
-    }
+      if (firstNumber + secondNumber === parseInt(sum)) {
+        // sends null cause there is no errors
+        return null;
+      } else {
+        // sends addition true to form errors
+        return { addition: true };
+      }
+    };
   }
 }
