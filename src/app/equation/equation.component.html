@@ -1,1 +1,9 @@
-<p>equation works!</p>
+<form [formGroup]="mathForm">
+  {{ a }} + {{ b }} =
+
+  <!-- Alternative syntaxes to get value -->
+  <!-- mathForm.value.a || mathForm.controls.a.value || mathForm.get("a").value -->
+  <!-- Also if we choose to implement a getter in class file (ex: get a() {})
+        then we can juste use {{ a }}
+  -->
+</form>
