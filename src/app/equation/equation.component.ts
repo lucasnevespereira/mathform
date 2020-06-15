@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { FormGroup, FormControl } from "@angular/forms";
 import { MathValidators } from "../math-validators";
 
 @Component({
@@ -28,7 +28,32 @@ export class EquationComponent implements OnInit {
     return this.mathForm.value.b;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(
+      this.mathForm.statusChanges.subscribe((value) => {
+        if (value === "INVALID") {
+          return;
+        }
+        // To set new random number
+        // this.mathForm.controls.a.setValue(this.randomNumber());
+        // this.mathForm.controls.b.setValue(this.randomNumber());
+        // this.mathForm.controls.answer.setValue("");
+
+        // or
+        // Set value to update all fields
+        this.mathForm.setValue({
+          a: this.randomNumber(),
+          b: this.randomNumber(),
+          answer: "",
+        });
+        // Patch value to update only some fields
+        // this.mathForm.patchValue({
+        //   b: this.randomNumber(),
+        //   answer: "",
+        // });
+      })
+    );
+  }
 
   // generate random number
   randomNumber() {
